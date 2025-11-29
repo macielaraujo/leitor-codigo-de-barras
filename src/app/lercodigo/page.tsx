@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { BrowserMultiFormatReader } from "@zxing/browser";
+import Link from "next/link";
 
 type VideoDecodeControls = {
   stop: () => void;
@@ -67,19 +68,53 @@ export default function Home() {
     };
   }, []);
 
+  const enviarParaPlanilha = async () => {
+    const SCRIPT_URL =
+      "https://script.google.com/macros/s/AKfycbxkyqsl-4yt8rz0dsyOO1Pq1QJS3MtDIYvqlLnfhVF4eIarib2_CCI091LWHgZUB9MS/exec";
+
+    if (!codLido) {
+      alert("Nenhum código lido!");
+      return;
+    }
+    if (!identifyCode) {
+      alert("Selecione uma categoria!");
+      return;
+    }
+
+    try {
+      await fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors", // obrigatório com Apps Script
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          codigo: codLido,
+          categoria: identifyCode,
+        }),
+      });
+
+      alert("Informações enviadas para a planilha!");
+    } catch (e) {
+      console.error("Erro ao enviar:", e);
+      alert("Erro ao enviar para a planilha!");
+    }
+    setCodLido("");
+  };
+
   return (
-    <section className="bg-slate-200 h-screen w-screen flex flex-col  items-center p-5">
+    <section className="bg-slate-100 h-screen w-screen flex flex-col  items-center p-5">
       <div className="container bg-slate-100 flex flex-col justify-center items-center gap-5">
         <h1 className="font-semibold text-lg">Leitor de Código de Barras</h1>
 
-        <div className="w-full border border-slate-400 rounded-2xl h-32 bg-amber-50">
+        <div className="w-full border border-slate-400 rounded-2xl h-32 bg-slate-200">
           <video ref={videoRef} className="h-full w-full object-cover" />
         </div>
 
         <div className="flex flex-row gap-5 justify-center w-full">
           <button
             onClick={iniciarLeitura}
-            className="bg-green-300 px-7 py-4 max-w-1/2 rounded-4xl text-sm hover:cursor-pointer"
+            className="bg-green-300 px-7 py-4 w-1/2 rounded-4xl text-sm hover:cursor-pointer"
             disabled={lendo}
           >
             {lendo ? "Lendo..." : "Ler código"}
@@ -88,7 +123,7 @@ export default function Home() {
           <button
             onClick={pararLeitura}
             disabled={!lendo}
-            className="bg-red-300 px-7 py-4 max-w-1/2 rounded-4xl text-sm hover:cursor-pointer"
+            className="bg-red-300 px-7 py-4 w-1/2 rounded-4xl text-sm hover:cursor-pointer"
           >
             Parar leitura
           </button>
@@ -100,12 +135,12 @@ export default function Home() {
 
         <div
           className={`${
-            codLido != "" ? "block" : "block"
+            codLido != "" ? "block" : "hidden"
           }  px-7 py-4 gap-5 my-7 w-full flex flex-col justify-center items-center`}
         >
           <h4 className="font-semibold">O código lido pertence à:</h4>
           <select
-            className="border border-slate-200 w-1/2 text-center"
+            className="border border-slate-300 w-1/2 text-center focus:border-slate-300"
             value={identifyCode}
             onChange={(e) => setIdentifyCode(e.target.value)}
           >
@@ -113,11 +148,14 @@ export default function Home() {
             <option value="Nota Fiscal">Nota fiscal</option>
             <option value="Bateria">Bateria</option>
           </select>
-          <p>{identifyCode}</p>
-          <button className="bg-blue-300 px-7 py-2 rounded-2xl">
+          <button
+            className="bg-blue-300 px-7 py-2 rounded-2xl hover:cursor-pointer"
+            onClick={() => enviarParaPlanilha()}
+          >
             Enviar para planilha
           </button>
         </div>
+        <Link href="/">Voltar</Link>
       </div>
     </section>
   );
