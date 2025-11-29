@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Leitor de Código de Barras com Next.js + Google Sheets
 
-## Getting Started
+Este projeto é uma aplicação Next.js que permite ler códigos de barras usando a câmera do navegador e registrar as informações em uma planilha Google Sheets através de Google Apps Script.
 
-First, run the development server:
+A planilha funciona como banco de dados, registrando a primeira leitura e atualizando a segunda (caso ocorra), respeitando regras de validação.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+### Funcionalidades
+#### Scanner de Código de Barras
+
+- Leitura usando a câmera via @zxing/browser;
+- Botão para iniciar leitura;
+- Botão para parar leitura (stop() no controle do vídeo);
+- Leitura pausada automaticamente quando um código é detectado.
+
+---
+
+### Classificação do Código
+
+O usuário seleciona uma categoria:
+
+- Nota Fiscal
+- Bateria
+
+### Envio para Google Sheets
+
+A aplicação envia:
+
+```
+{
+  codigo: "12345",
+  categoria: "Nota Fiscal"
+}
+
+```
+---
+
+### Regras de Registro na Planilha
+
+A planilha possui duas linhas de cabeçalhos e os dados começam na linha 3, no formato:
+
+```
+Data |	Código de barras |	Categoria |	Segunda leitura |	Categoria 2 |	Status
+```
+✔️ Primeira leitura
+
+Se o código ainda não existe, o Apps Script insere:
+```
+ Data | Código | Categoria | "aguardando" | "" | "pendente" 
+```
+✔️ Segunda leitura
+
+Se o código já existe e o status não é "ok":
+```
+ Segunda leitura → "registrado" | Categoria 2 → nova categoria | Status → "ok" |
+```
+#### Regra de bloqueio
+
+Se o status já for "ok", nenhuma atualização é permitida.
+
+---
+
+### Tecnologias Utilizadas
+
+- Next.js 14+
+- React
+- TailwindCSS
+- @zxing/browser
+- Google Apps Script
+- Google Sheets
+- Variáveis de ambiente (.env)
+
+---
+
+### Instalação
+
+1️. Instalar dependências
+
+```
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2️. Criar um arquivo .env
+```
+NEXT_PUBLIC_URL_PLANILHA="https://script.google.com/macros/s/SEU-SCRIPT-ID/exec"
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Como Usar
 
-## Learn More
+- Abra o app no navegador
+- Clique em Ler código
+- Aponte a câmera para o código de barras
+- Selecione a categoria
+- Clique Enviar para planilha
+- Leia novamente o mesmo código se quiser registrar a segunda categoria
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
