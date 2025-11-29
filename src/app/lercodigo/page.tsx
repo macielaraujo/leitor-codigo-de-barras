@@ -69,8 +69,8 @@ export default function Home() {
   }, []);
 
   const enviarParaPlanilha = async () => {
-    const SCRIPT_URL =
-      "https://script.google.com/macros/s/AKfycbxkyqsl-4yt8rz0dsyOO1Pq1QJS3MtDIYvqlLnfhVF4eIarib2_CCI091LWHgZUB9MS/exec";
+    const SCRIPT_URL = process.env.NEXT_PUBLIC_URL_PLANILHA!;
+    console.log("URL da planilha:", process.env.NEXT_PUBLIC_URL_PLANILHA);
 
     if (!codLido) {
       alert("Nenhum código lido!");
@@ -155,7 +155,12 @@ export default function Home() {
             Enviar para planilha
           </button>
         </div>
-        <Link href="/">Voltar</Link>
+        <Link
+          href="/"
+          className="bg-blue-800 text-white px-5 py-2 rounded-2xl hover:cursor-pointer"
+        >
+          Voltar
+        </Link>
       </div>
     </section>
   );
