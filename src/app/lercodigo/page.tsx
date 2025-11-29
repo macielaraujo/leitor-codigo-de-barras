@@ -144,7 +144,7 @@ export default function Home() {
         >
           <h4 className="font-semibold">O código lido pertence à:</h4>
           <select
-            className="border border-slate-300 w-1/2 text-center focus:border-slate-300"
+            className="border border-slate-300 w-2/3 text-center focus:border-slate-300"
             value={identifyCode}
             onChange={(e) => setIdentifyCode(e.target.value)}
           >
