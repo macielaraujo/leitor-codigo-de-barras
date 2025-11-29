@@ -149,7 +149,7 @@ export default function Home() {
             onChange={(e) => setIdentifyCode(e.target.value)}
           >
             <option value="">Selecione</option>
-            <option value="Nota Fiscal">Nota fiscal</option>
+            <option value="Cartão de Garantia">Cartão de Garantia</option>
             <option value="Bateria">Bateria</option>
           </select>
           <div className=" relative">
