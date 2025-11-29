@@ -11,6 +11,7 @@ type VideoDecodeControls = {
 export default function Home() {
   const [codLido, setCodLido] = useState("");
   const [lendo, setLendo] = useState(false);
+  const [enviando, setEnviando] = useState("Enviar para planilha");
   const [identifyCode, setIdentifyCode] = useState("");
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -71,6 +72,7 @@ export default function Home() {
   const enviarParaPlanilha = async () => {
     const SCRIPT_URL = process.env.NEXT_PUBLIC_URL_PLANILHA!;
     console.log("URL da planilha:", process.env.NEXT_PUBLIC_URL_PLANILHA);
+    setEnviando("Enviando...");
 
     if (!codLido) {
       alert("Nenhum código lido!");
@@ -100,6 +102,7 @@ export default function Home() {
       alert("Erro ao enviar para a planilha!");
     }
     setCodLido("");
+    setEnviando("Enviar para Planilha");
   };
 
   return (
@@ -148,12 +151,19 @@ export default function Home() {
             <option value="Nota Fiscal">Nota fiscal</option>
             <option value="Bateria">Bateria</option>
           </select>
-          <button
-            className="bg-blue-300 px-7 py-2 rounded-2xl hover:cursor-pointer"
-            onClick={() => enviarParaPlanilha()}
-          >
-            Enviar para planilha
-          </button>
+          <div className=" relative">
+            <div
+              className={`${
+                identifyCode != "" ? "-z-10" : "z-10"
+              } absolute bg-slate-500/50 w-full h-full rounded-2xl`}
+            ></div>
+            <button
+              className="bg-blue-300 px-7 py-2 rounded-2xl hover:cursor-pointer z-20"
+              onClick={() => enviarParaPlanilha()}
+            >
+              {enviando}
+            </button>
+          </div>
         </div>
         <Link
           href="/"
