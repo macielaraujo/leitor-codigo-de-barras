@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Formulario } from "./components/formulario";
 
 export default function Home() {
   return (
@@ -10,12 +10,7 @@ export default function Home() {
             Realizando o controle de produtos lidos
           </p>
         </div>
-        <Link
-          href="/lercodigo"
-          className="bg-purple-700 text-white px-5 py-2 rounded-2xl hover:cursor-pointer"
-        >
-          Ler Código
-        </Link>
+        <Formulario />
       </div>
     </main>
   );
