@@ -70,9 +70,7 @@ export default function Home() {
   }, []);
 
   const enviarParaPlanilha = async () => {
-    const SCRIPT_URL =
-      "https://script.google.com/macros/s/AKfycbxkyqsl-4yt8rz0dsyOO1Pq1QJS3MtDIYvqlLnfhVF4eIarib2_CCI091LWHgZUB9MS/exec";
-    console.log("URL da planilha:", process.env.NEXT_PUBLIC_URL_PLANILHA);
+    const SCRIPT_URL = process.env.NEXT_PUBLIC_URL_PLANILHA;
     setEnviando("Enviando...");
 
     if (!codLido) {
