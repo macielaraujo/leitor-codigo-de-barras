@@ -70,7 +70,7 @@ export default function Home() {
   }, []);
 
   const enviarParaPlanilha = async () => {
-    const SCRIPT_URL = process.env.NEXT_PUBLIC_URL_PLANILHA;
+    const SCRIPT_URL = process.env.NEXT_PUBLIC_URL_PLANILHA!;
     setEnviando("Enviando...");
 
     if (!codLido) {
